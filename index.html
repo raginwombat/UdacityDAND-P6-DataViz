@@ -1,12 +1,63 @@
 <html>
 <head>
-<script src="https://d3js.org/d3.v3.min.js"></script>
-<script src="http://dimplejs.org/dist/dimple.v2.3.0.min.js"></script>
-<link rel="stylesheet" type="text/css" href="style.css">
+<link rel="stylesheet" type="text/css" href="css/style.css">
 
+<script src="js/d3.v3.min.js"></script>
+<script src="js/dimple.v2.3.0.min.js"></script>
+
+<script type="text/javascript">
+function draw(data){
+
+  "use strict";
+  var margin = 75,
+      width = 1400 - margin,
+      height = 600 - margin;
+
+    d3.select('#headerContainer')
+      .append('h2')
+      .text('Prosper Loan Data')
+
+    var svg = d3.select('#chartContainer')
+          .append("svg")
+            .attr("width", width + margin)
+            .attr("height", height + margin)
+          .append('g')
+            .attr('class','chart');
+
+    /* Manipulate data */
+    var loansByQuarter = d3.nest().key(function(d){ return d.LoanOriginationQuarter;}).entries(data)
+
+    var loansByCount =d3.nest().key(function(d){ return d.LoanOriginationQuarter;}).rollup(function(v){return v.length;}).entries(data);
+
+    /*Create chart */
+    
+    var myChart = new dimple.chart(svg, data);
+    //myChart.setBounds(75, 50, 495, 310)
+    //var xaxis = myChart.addCategoryAxis('x', 'key');
+    //var yaxis = myChart.addMeasureAxis('y', 'values');
+    
+    
+    myChart.addCategoryAxis('x', 'LoanOriginationQuarter')
+    //myChart.addTimeAxis('x', 'ListingCreationDate');
+    myChart.addMeasureAxis('y', 'ListingKey');
+    myChart.addSeries(null, dimple.plot.line);
+    debugger;
+    myChart.draw()  
+}
+</script>
 </head>
 <body>
 </body>
+  <div id="headerContainer">
+  </div>
+  <div id="chartContainer">
+    <script type="text/javascript">
+    
+   
 
+    //d3.csv("data/parsedData.csv", draw);
+    d3.csv("data/smallparsedData.csv", draw);
 
+    </script>
+  </div>
 </html>
