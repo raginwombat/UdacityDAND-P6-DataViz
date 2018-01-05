@@ -23,30 +23,29 @@
 
       var loansByCount =d3.nest().key(function(d){ return d.LoanOriginationQuarter;}).rollup(function(v){return v.length;}).entries(data);
 
+      var loansByCreation =d3.nest().key(function(d){ return d.ListingCreationDate;}).entries(data)
+
       /*Create chart */
       
       var myChart = new dimple.chart(svg, data);
 
       //var xaxis = myChart.addTimeAxis('x', '%Y-%m-%d %H:%M:%S','%Y-%m', 'ListingCreationDate');
-      
-      debugger;
+      //debugger;
       //var xaxis = myChart.addCategoryAxis('x', 'LoanOriginationQuarter')
-      var xaxis = myChart.addTimeAxis('x',  'ListingCreationDate', '%Y-%m', '%Y-%m');//, '%Y-%m-%d %H:%M:%S.%L%L%L');//, '%m-%Y');
-      //var xaxis = myChart.addTimeAxis('x',  'ListingCreationDate', '%Y-%m');//, '%m-%Y');
-      //xaxis.dateParseFormat = '%Y-%m-%d %H:%M:%S.%L%L%L';
-      //var xaxis = myChart.addCategoryAxis('x', 'Occupation');
-
+      var xaxis = myChart.addTimeAxis('x',  'ListingCreationDate', '%Y-%m', '%Y-%m');
       //xaxis.timePeriod = d3.timeMonths;
       //xaxis.timeInterval = 4;
       xaxis.ticks = d3.timeMonths;
-      debugger;
+      //debugger;
       //xaxis.timePeriod = d3.timeMonths; // Section time into months
       //xaxis.timeInterval = 4; //break into quarters
-      var yaxis = myChart.addCategoryAxis('y', 'Occupation');
       
+      var yaxis = myChart.addCategoryAxis('y', 'IncomeRange');
+      //var yaxis = myChart.addCategoryAxis('y', 'Occupation');
       var zaxis = myChart.addMeasureAxis('z', 'ListingKey');
       zaxis.title = 'Number of Loans'
-      myChart.addSeries(null, dimple.plot.scatter);
+      var ser = myChart.addSeries(null, dimple.plot.scatter);
+      ser.addOrderRule('ListingCreationDate')
       myChart.draw();  
     }
 </script>
@@ -56,10 +55,10 @@
 <body>
   <script type='text/javascript'>
   //2013-09-14 18:38:39.097000000
-
+  console.time("TotalTime:");
   //d3.csv('data/smallparsedData.csv', draw);
-  d3.csv('data/smallparsedData.csv', function(d){
-
+  //d3.csv('data/smallparsedData.csv', function(d){
+  d3.csv('data/medParsedData.csv', function(d){
     //debugger;
     dfor = d3.timeFormat('%Y-%m');
     
@@ -75,6 +74,7 @@
     
     draw(d);
   });
+  console.timeEnd("TotalTime:");
 
   </script>
   
