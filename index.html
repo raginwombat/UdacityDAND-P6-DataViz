@@ -26,17 +26,19 @@
       /*Create chart */
       
       var myChart = new dimple.chart(svg, data);
+
       //var xaxis = myChart.addTimeAxis('x', '%Y-%m-%d %H:%M:%S','%Y-%m', 'ListingCreationDate');
-      //narrative ssturct 43
+      
       debugger;
-      var xaxis = myChart.addCategoryAxis('x', 'LoanOriginationQuarter')
-      //var xaxis = myChart.addTimeAxis('x',  'ListingCreationDate', '%Y-%m-%d %H:%M:%S.%L%L%L');//, '%m-%Y');
+      //var xaxis = myChart.addCategoryAxis('x', 'LoanOriginationQuarter')
+      var xaxis = myChart.addTimeAxis('x',  'ListingCreationDate', '%Y-%m');//, '%Y-%m-%d %H:%M:%S.%L%L%L');//, '%m-%Y');
       //var xaxis = myChart.addTimeAxis('x',  'ListingCreationDate', '%Y-%m');//, '%m-%Y');
       //xaxis.dateParseFormat = '%Y-%m-%d %H:%M:%S.%L%L%L';
       //var xaxis = myChart.addCategoryAxis('x', 'Occupation');
 
       //xaxis.timePeriod = d3.timeMonths;
       //xaxis.timeInterval = 4;
+      xaxis.ticks = d3.timeYears;
       debugger;
       //xaxis.timePeriod = d3.timeMonths; // Section time into months
       //xaxis.timeInterval = 4; //break into quarters
@@ -50,10 +52,6 @@
 
 <body>
   <script type='text/javascript'>
-  /*
-    Use D3 (not dimple.js) to load the TSV file
-    and pass the contents of it to the draw function
-    */
   //2013-09-14 18:38:39.097000000
 
   //d3.csv('data/smallparsedData.csv', draw);
@@ -61,30 +59,22 @@
 
     debugger;
     dfor = d3.timeFormat('%Y-%m');
-    dpar = d3.timeParse('%Y-%m-%d %H:%M:%S.%L%L%L');
+    
     for (i=0; i<d.length; i++){
+      (d[i]['ListingCreationDate'].length > 19) ? dpar = d3.timeParse('%Y-%m-%d %H:%M:%S.%L%L%L'): dpar = d3.timeParse('%Y-%m-%d %H:%M:%S');
+
       d[i]['ListingCreationDate'] = dfor(dpar(d[i]['ListingCreationDate'])) ;
+      if (  d[i]['ListingCreationDate'] ==  '1969-12'){
+        console.log(d[i])
+      }
     }
-    //d['ListingCreationDate'] = dfor(dpar(d['ListingCreationDate']));
-  
+    
     console.log(d.columns);
     debugger;
     
-    //console.log(typeof(d['ListingCreationDate']))
-    //console.log(d['ListingCreationDate']);
-    
-    //console.log(typeof(d['ListingCreationDate']))
     draw(d);
   });
 
-/*g = function(d){ 
-  dfor = d3.timeFormat('%Y-%m');
-  dpar = d3.timeParse('%Y-%m-%d %H:%M:%S.%L%L%L');
-  for (i=0; i<d.length); i++){
-    d[i]['ListingCreationDate'] = dfor(dpar(d[i]['ListingCreationDate'])) ;
-  }
-};
-*/
   </script>
   
 
