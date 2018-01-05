@@ -31,19 +31,22 @@
       
       debugger;
       //var xaxis = myChart.addCategoryAxis('x', 'LoanOriginationQuarter')
-      var xaxis = myChart.addTimeAxis('x',  'ListingCreationDate', '%Y-%m');//, '%Y-%m-%d %H:%M:%S.%L%L%L');//, '%m-%Y');
+      var xaxis = myChart.addTimeAxis('x',  'ListingCreationDate', '%Y-%m', '%Y-%m');//, '%Y-%m-%d %H:%M:%S.%L%L%L');//, '%m-%Y');
       //var xaxis = myChart.addTimeAxis('x',  'ListingCreationDate', '%Y-%m');//, '%m-%Y');
       //xaxis.dateParseFormat = '%Y-%m-%d %H:%M:%S.%L%L%L';
       //var xaxis = myChart.addCategoryAxis('x', 'Occupation');
 
       //xaxis.timePeriod = d3.timeMonths;
       //xaxis.timeInterval = 4;
-      xaxis.ticks = d3.timeYears;
+      xaxis.ticks = d3.timeMonths;
       debugger;
       //xaxis.timePeriod = d3.timeMonths; // Section time into months
       //xaxis.timeInterval = 4; //break into quarters
-      var yaxis = myChart.addMeasureAxis('y', 'ListingKey');
-      myChart.addSeries(null, dimple.plot.line);
+      var yaxis = myChart.addCategoryAxis('y', 'Occupation');
+      
+      var zaxis = myChart.addMeasureAxis('z', 'ListingKey');
+      zaxis.title = 'Number of Loans'
+      myChart.addSeries(null, dimple.plot.scatter);
       myChart.draw();  
     }
 </script>
@@ -57,20 +60,18 @@
   //d3.csv('data/smallparsedData.csv', draw);
   d3.csv('data/smallparsedData.csv', function(d){
 
-    debugger;
+    //debugger;
     dfor = d3.timeFormat('%Y-%m');
     
     for (i=0; i<d.length; i++){
       (d[i]['ListingCreationDate'].length > 19) ? dpar = d3.timeParse('%Y-%m-%d %H:%M:%S.%L%L%L'): dpar = d3.timeParse('%Y-%m-%d %H:%M:%S');
 
       d[i]['ListingCreationDate'] = dfor(dpar(d[i]['ListingCreationDate'])) ;
-      if (  d[i]['ListingCreationDate'] ==  '1969-12'){
-        console.log(d[i])
-      }
+      
     }
     
     console.log(d.columns);
-    debugger;
+    //debugger;
     
     draw(d);
   });
