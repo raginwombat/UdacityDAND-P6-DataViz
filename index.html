@@ -1,63 +1,98 @@
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="css/style.css">
+<link rel='stylesheet' type='text/css' href='css/style.css'>
 
-<script src="js/d3.v3.min.js"></script>
-<script src="js/dimple.v2.3.0.min.js"></script>
+<script src='js/d3.v4.min.js'></script>
+<script src='js/dimple.v2.3.0.min.js'></script>
+<script type='text/javascript'>
+  function draw(data){
 
-<script type="text/javascript">
-function draw(data){
+    'use strict';
+    var margin = 100,
+        width = 1400 - margin,
+        height = 600 - margin;
 
-  "use strict";
-  var margin = 75,
-      width = 1400 - margin,
-      height = 600 - margin;
+      var head = d3.select('#headerContainer')
+        .append('h2')
+        .text('Prosper Loan Data')
+      d3.select()
+      var svg = dimple.newSvg('#chartContainer', width + margin, height + margin);
 
-    d3.select('#headerContainer')
-      .append('h2')
-      .text('Prosper Loan Data')
+      /* Manipulate data */
+      var loansByQuarter = d3.nest().key(function(d){ return d.LoanOriginationQuarter;}).entries(data)
 
-    var svg = d3.select('#chartContainer')
-          .append("svg")
-            .attr("width", width + margin)
-            .attr("height", height + margin)
-          .append('g')
-            .attr('class','chart');
+      var loansByCount =d3.nest().key(function(d){ return d.LoanOriginationQuarter;}).rollup(function(v){return v.length;}).entries(data);
 
-    /* Manipulate data */
-    var loansByQuarter = d3.nest().key(function(d){ return d.LoanOriginationQuarter;}).entries(data)
+      /*Create chart */
+      
+      var myChart = new dimple.chart(svg, data);
+      //var xaxis = myChart.addTimeAxis('x', '%Y-%m-%d %H:%M:%S','%Y-%m', 'ListingCreationDate');
+      //narrative ssturct 43
+      debugger;
+      var xaxis = myChart.addCategoryAxis('x', 'LoanOriginationQuarter')
+      //var xaxis = myChart.addTimeAxis('x',  'ListingCreationDate', '%Y-%m-%d %H:%M:%S.%L%L%L');//, '%m-%Y');
+      //var xaxis = myChart.addTimeAxis('x',  'ListingCreationDate', '%Y-%m');//, '%m-%Y');
+      //xaxis.dateParseFormat = '%Y-%m-%d %H:%M:%S.%L%L%L';
+      //var xaxis = myChart.addCategoryAxis('x', 'Occupation');
 
-    var loansByCount =d3.nest().key(function(d){ return d.LoanOriginationQuarter;}).rollup(function(v){return v.length;}).entries(data);
-
-    /*Create chart */
-    
-    var myChart = new dimple.chart(svg, data);
-    //myChart.setBounds(75, 50, 495, 310)
-    //var xaxis = myChart.addCategoryAxis('x', 'key');
-    //var yaxis = myChart.addMeasureAxis('y', 'values');
-    
-    
-    myChart.addCategoryAxis('x', 'LoanOriginationQuarter')
-    //myChart.addTimeAxis('x', 'ListingCreationDate');
-    myChart.addMeasureAxis('y', 'ListingKey');
-    myChart.addSeries(null, dimple.plot.line);
-    debugger;
-    myChart.draw()  
-}
+      //xaxis.timePeriod = d3.timeMonths;
+      //xaxis.timeInterval = 4;
+      debugger;
+      //xaxis.timePeriod = d3.timeMonths; // Section time into months
+      //xaxis.timeInterval = 4; //break into quarters
+      var yaxis = myChart.addMeasureAxis('y', 'ListingKey');
+      myChart.addSeries(null, dimple.plot.line);
+      myChart.draw();  
+    }
 </script>
+
 </head>
+
 <body>
-</body>
-  <div id="headerContainer">
-  </div>
-  <div id="chartContainer">
-    <script type="text/javascript">
+  <script type='text/javascript'>
+  /*
+    Use D3 (not dimple.js) to load the TSV file
+    and pass the contents of it to the draw function
+    */
+  //2013-09-14 18:38:39.097000000
+
+  //d3.csv('data/smallparsedData.csv', draw);
+  d3.csv('data/smallparsedData.csv', function(d){
+
+    debugger;
+    dfor = d3.timeFormat('%Y-%m');
+    dpar = d3.timeParse('%Y-%m-%d %H:%M:%S.%L%L%L');
+    for (i=0; i<d.length; i++){
+      d[i]['ListingCreationDate'] = dfor(dpar(d[i]['ListingCreationDate'])) ;
+    }
+    //d['ListingCreationDate'] = dfor(dpar(d['ListingCreationDate']));
+  
+    console.log(d.columns);
+    debugger;
     
-   
+    //console.log(typeof(d['ListingCreationDate']))
+    //console.log(d['ListingCreationDate']);
+    
+    //console.log(typeof(d['ListingCreationDate']))
+    draw(d);
+  });
 
-    //d3.csv("data/parsedData.csv", draw);
-    d3.csv("data/smallparsedData.csv", draw);
+/*g = function(d){ 
+  dfor = d3.timeFormat('%Y-%m');
+  dpar = d3.timeParse('%Y-%m-%d %H:%M:%S.%L%L%L');
+  for (i=0; i<d.length); i++){
+    d[i]['ListingCreationDate'] = dfor(dpar(d[i]['ListingCreationDate'])) ;
+  }
+};
+*/
+  </script>
+  
 
-    </script>
+  <div id='headerContainer'>
   </div>
+
+  
+  <div id='chartContainer'>
+  </div>
+</body>
 </html>
