@@ -8,3 +8,4 @@
 * https://github.com/d3/d3/issues/2853
 * https://github.com/PMSI-AlignAlytics/dimple/wiki/dimple.axis#timePeriod
 * https://github.com/d3/d3/blob/master/API.md#time-intervals-d3-time
+* https://stackoverflow.com/questions/30945581/change-axis-color-dimple

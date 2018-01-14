@@ -1,3 +1,30 @@
 #headerContainer {
   text-align: center;
 }
+
+
+text.dimple-axis {
+	color: red;
+	font-size: 18px;
+	text-transform: uppercase;
+}
+
+.dimple-axis-y > text {
+	fill: green;
+	color: red;
+	font-size: 19px;
+	
+}
+
+
+.dimple-axis.text {
+	color: blue;
+	font-size: 208px;
+	text-transform: uppercase;
+}
+
+dimple-axis.text {
+	color: orange;
+	font-size: 208px;
+	text-transform: uppercase;
+}
