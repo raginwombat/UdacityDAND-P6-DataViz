@@ -1,0 +1,98 @@
+<html>
+<head>
+<link rel='stylesheet' type='text/css' href='css/style.css'>
+<script src='js/d3.v4.min.js'></script>
+<script src='js/dimple.v2.3.0.min.js'></script>
+<script type='text/javascript'>
+  function draw(data){
+    data = dimple.filterData(data, 'IncomeRange', ['$1-24,999','$25,000-49,999', '$50,000-74,999', '$75,000-99,999', '$100,000+'])
+    'use strict';
+    var margin = 100,
+        width = 1400 - margin,
+        height = 600 - margin;
+      var head = d3.select('#headerContainer')
+        .append('h2')
+        .text('Prosper Loans Made By Loan Date')
+      d3.select()
+      var svg = dimple.newSvg('#chartContainer', width + margin, height + margin);
+      /* Manipulate data */
+      var loansByQuarter = d3.nest().key(function(d){ return d.LoanOriginationQuarter;}).entries(data)
+      var loansByCount =d3.nest().key(function(d){ return d.LoanOriginationQuarter;}).rollup(function(v){return v.length;}).entries(data);
+      var loansByCreation =d3.nest().key(function(d){ return d.ListingCreationDate;}).entries(data)
+      /*Create chart */
+      
+      var myChart = new dimple.chart(svg, data);
+      //var myChart = new dimple.chart(svg, loansByQuarter);
+      //var xaxis = myChart.addTimeAxis('x', '%Y-%m-%d %H:%M:%S','%Y-%m', 'ListingCreationDate');
+      //debugger;
+      //var xaxis = myChart.addCategoryAxis('x', 'LoanOriginationQuarter')
+      var xaxis = myChart.addTimeAxis('x',  'ListingCreationDate', '%Y-%m', '%Y-%m');
+      xaxis.timePeriod = d3.timeMonth;
+      xaxis.timeInterval = 4;
+      xaxis.title = 'Loan Date'
+      //debugger;
+      //xaxis.timePeriod = d3.timeMonths; // Section time into months
+      //xaxis.timeInterval = 4; //break into quarters
+      
+      var y1axis = myChart.addCategoryAxis('y', 'IncomeRange');
+      y1axis.addOrderRule(['Other', '$0', '$1-24,999', '$25,000-49,999', '$50,000-74,999', '$75,000-99,999', '$100,000+']);
+      y1axis.title = 'Income Range'
+      //y1axis.shapes.select('dimple-axis-y').style('font-size', '18px')
+      //yaxis.fontSize  = 12px;
+      //var yaxis = myChart.addCategoryAxis('y', 'Occupation');
+      var y2axis = myChart.addMeasureAxis('y', 'ListingKey' );
+      y2axis.title  = 'Total Number of Loans';
+      var zaxis = myChart.addMeasureAxis('z', 'ListingKey');
+      zaxis.title = 'Number of Loans by Income Bracket'
+      var ser = myChart.addSeries(null, dimple.plot.scatter, [xaxis, y1axis, zaxis]);
+      ser.addOrderRule('ListingCreationDate')
+      var totser = myChart.addSeries(null, dimple.plot.line, [xaxis , y2axis])
+      //svg.selectAll('.dimple-axis-y').style('font-size', '18px');
+      
+      debugger;
+      myChart.draw();
+      d3.select('.dimple-custom-axis-title.dimple-axis-y').attr('style', 'font-family: sans-serif; font-size: 18px;')
+      myChart.draw();
+      debugger;
+    }
+    function update(){
+    }
+</script>
+
+</head>
+
+<body>
+  <script type='text/javascript'>
+  //2013-09-14 18:38:39.097000000
+  console.time("TotalTime:");
+  //d3.csv('data/smallparsedData.csv', draw);
+  //d3.csv('data/smallparsedData.csv', function(d){
+  d3.csv('data/medParsedData.csv', function(d){
+    //debugger;
+    dfor = d3.timeFormat('%Y-%m');
+    
+    for (i=0; i<d.length; i++){
+      (d[i]['ListingCreationDate'].length > 19) ? dpar = d3.timeParse('%Y-%m-%d %H:%M:%S.%L%L%L'): dpar = d3.timeParse('%Y-%m-%d %H:%M:%S');
+      d[i]['ListingCreationDate'] = dfor(dpar(d[i]['ListingCreationDate'])) ;
+      //(d[i]['IncomeRange'] == '$0' | d[i]['IncomeRange'] == 'Not displayed' | d[i]['IncomeRange'] == 'Not employed') ? d[i]['IncomeRange'] = 'Other': null;
+      //(d[i]['IncomeRange'] == '$0' | d[i]['IncomeRange'] == 'Not displayed' | d[i]['IncomeRange'] == 'Not employed') ? delete d[i] : null;
+      
+    }
+    
+    console.log(d.columns);
+    //debugger;
+    
+    draw(d);
+  });
+  console.timeEnd("TotalTime:");
+  </script>
+  
+
+  <div id='headerContainer'>
+  </div>
+
+  
+  <div id='chartContainer'>
+  </div>
+</body>
+</html>
