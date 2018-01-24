@@ -43,18 +43,31 @@ function draw(data){
 
       var ser = myChart.addSeries(null, dimple.plot.scatter, [xaxis, y1axis, zaxis]);
       ser.addOrderRule('ListingCreationDate');
+      ser.getTooltipText = function (e) {
+                return [
+                    "Hey you hovered over " + e.aggField[0] + "!",
+                    "Each element in the array becomes a new line."
+                ];
+            };
       //ser.addOrderRule('LoanQuarter')
-      
       //var totser = myChart.addSeries(null, dimple.plot.line, [xaxis , y2axis])
-
-      
       myChart.draw();
-      debugger;
+
+
+      var svg2 = dimple.newSvg('#chartArea', width + margin, height + margin);
+
+      var myChart2 = new dimple.chart(svg2, data)
+      var xaxis2 = myChart2.addTimeAxis('x',  'ListingCreationDate', '%Y-%m', '%Y-%m');
+      var y1axis2 = myChart2.addCategoryAxis('y', 'IncomeRange');
+      y1axis2.addOrderRule(['Other', '$0', '$1-24,999', '$25,000-49,999', '$50,000-74,999', '$75,000-99,999', '$100,000+']);
+      y1axis2.title = 'Income Range'
+
+      var zaxis2 = myChart2.addMeasureAxis('z', 'ListingKey');
+      zaxis2.title = 'Number of Loans by Income Bracket';
+
+      var ser2 = myChart2.addSeries(null, dimple.plot.scatter, [xaxis2, y1axis2, zaxis2]);
+      ser2.addOrderRule('ListingCreationDate');
+      
+
 
     }
-
-    function update(){
-
-
-    }
-

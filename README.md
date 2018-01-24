@@ -13,6 +13,8 @@ After feedback a trendline was added to show the total number of loans over time
 
 A new data point "Loan Quarter" was creaed based off of the creation date and it's been used to bin th data instead of the creation date to tighten up the drawn circles
 
+A blow out that shows the data fromthe bubble was created when clicking on a bubble. 
+
 ##Feedback - include all feedback you received from others on your visualization from the first sketch to the final visualization
 
 Feedback 1 V1: 
@@ -40,3 +42,4 @@ Feedback 3 v3:
 * https://github.com/PMSI-AlignAlytics/dimple/wiki/dimple.axis#timePeriod
 * https://github.com/d3/d3/blob/master/API.md#time-intervals-d3-time
 * https://stackoverflow.com/questions/30945581/change-axis-color-dimple
+* http://dimplejs.org/adhoc_viewer.html?id=adhoc_bar_custom_tooltips

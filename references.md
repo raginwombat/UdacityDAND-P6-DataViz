@@ -9,3 +9,4 @@
 * https://github.com/PMSI-AlignAlytics/dimple/wiki/dimple.axis#timePeriod
 * https://github.com/d3/d3/blob/master/API.md#time-intervals-d3-time
 * https://stackoverflow.com/questions/30945581/change-axis-color-dimple
+* http://dimplejs.org/adhoc_viewer.html?id=adhoc_bar_custom_tooltips
