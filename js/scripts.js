@@ -1,9 +1,17 @@
 
 function draw(data){
 
-    data = dimple.filterData(data, 'IncomeRange', ['$1-24,999','$25,000-49,999', '$50,000-74,999', '$75,000-99,999', '$100,000+'])
+    function dateFilter(data, startYear, EndYear){
+      return data.filter( function(d){ 
+                           return (d['LoanYear'].getFullYear() >= startYear && d['LoanYear'].getFullYear() < EndYear ); 
+                         }  );      
+    }
+
+
+    //debugger;
+    //Create the svg and chart    
     'use strict';
-    var margin = 100,
+    var margin = 50,
         width = 1400 - margin,
         height = 600 - margin;
 
@@ -14,60 +22,38 @@ function draw(data){
       var svg1 = dimple.newSvg('#chartArea', width + margin, height + margin);
 
 
-      debugger;
-      /*Create chart */
       var myChart = new dimple.chart(svg1, data);
-      //var myChart = new dimple.chart(svg1, loansByQuarter);
-
-      //var xaxis = myChart.addTimeAxis('x', '%Y-%m-%d %H:%M:%S','%Y-%m', 'ListingCreationDate');
-      //debugger;
-      var xaxis = myChart.addTimeAxis('x',  'ListingCreationDate', '%Y-%m', '%Y-%m');
-      //var xaxis = myChart.addTimeAxis('x',  'LoanQuarter', '%Y-%m', '%Y-%m');
-      //var xaxis = myChart.addTimeAxis('x',  'LoanYear', '%Y-%m', '%Y-%m');
-      xaxis.timePeriod = d3.timeMonth;
-      //xaxis.timePeriod = d3.timeYear;
-      xaxis.timeInterval = 4;
+    
+      //Setup the x axis
+      var xaxis = myChart.addTimeAxis('x',  'ListingCreationDate', '%Y-%m', '%Y');
+      xaxis.timePeriod = d3.timeYear;
+      xaxis.timeInterval = 1;
       xaxis.title = 'Loan Date'
+      xaxis.fontSize = '1em'
+
+      //Create the yaxis that will draw the data. The data has already been sectioned.
+      //The category function is utilized to generate the color coding
+      var yaxis = myChart.addMeasureAxis('y', 'ListingCreationDate' );
+      yaxis.title  = 'Total Number of Loans';
+      yaxis.fontSize = '1em'
+      yaxis.ticks=15
+
+      //Create the series to match the axes already crated and bind the filtered data to them
+      var ser = myChart.addSeries(['Era'], dimple.plot.bar, [xaxis , yaxis])
       
-      //Draw Axis 1
-      var y1axis = myChart.addCategoryAxis('y', 'IncomeRange');
-      y1axis.addOrderRule(['Other', '$0', '$1-24,999', '$25,000-49,999', '$50,000-74,999', '$75,000-99,999', '$100,000+']);
-      y1axis.title = 'Income Range'
+      //Custom colors for serires
+      myChart.defaultColors = [
+          new dimple.color("#9b59b6", "#8e44ad", 1), // purple
+          new dimple.color("#e67e22", "#d35400", 1), // orange
+          new dimple.color("#1abc9c", "#16a085", 1), // turquoise
+      ];
 
-      //Draw axis 2
-      //var y2axis = myChart.addMeasureAxis('y', 'ListingCreationDate' );
-      //y2axis.title  = 'Total Number of Loans';
+      // myChart.addLegend(x, y, width, height, horizontalAlign, series)
 
-      var zaxis = myChart.addMeasureAxis('z', 'ListingKey');
-      zaxis.title = 'Number of Loans by Income Bracket';
+     var legend = myChart.addLegend(500, 590, '50%', 60);
+     legend.fontSize = '1.5em'
 
-      var ser = myChart.addSeries(null, dimple.plot.scatter, [xaxis, y1axis, zaxis]);
-      ser.addOrderRule('ListingCreationDate');
-      ser.getTooltipText = function (e) {
-                return [
-                    "Hey you hovered over " + e.aggField[0] + "!",
-                    "Each element in the array becomes a new line."
-                ];
-            };
-      //ser.addOrderRule('LoanQuarter')
-      //var totser = myChart.addSeries(null, dimple.plot.line, [xaxis , y2axis])
       myChart.draw();
-
-
-      var svg2 = dimple.newSvg('#chartArea', width + margin, height + margin);
-
-      var myChart2 = new dimple.chart(svg2, data)
-      var xaxis2 = myChart2.addTimeAxis('x',  'ListingCreationDate', '%Y-%m', '%Y-%m');
-      var y1axis2 = myChart2.addCategoryAxis('y', 'IncomeRange');
-      y1axis2.addOrderRule(['Other', '$0', '$1-24,999', '$25,000-49,999', '$50,000-74,999', '$75,000-99,999', '$100,000+']);
-      y1axis2.title = 'Income Range'
-
-      var zaxis2 = myChart2.addMeasureAxis('z', 'ListingKey');
-      zaxis2.title = 'Number of Loans by Income Bracket';
-
-      var ser2 = myChart2.addSeries(null, dimple.plot.scatter, [xaxis2, y1axis2, zaxis2]);
-      ser2.addOrderRule('ListingCreationDate');
-      
-
+      //debugger;
 
     }

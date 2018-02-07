@@ -12,27 +12,30 @@
 <body>
 
   <script type='text/javascript'>
-  //2013-09-14 18:38:39.097000000
+
+  //open  timer for data processing
   console.time("TotalTime:");
-  //d3.csv('data/smallparsedData.csv', draw);
-  //d3.csv('data/smallparsedData.csv', function(d){
+  
   d3.csv('data/medParsedData.csv', function(d){
-    //debugger;
+    //All of the data manipulation is done in this step to keep the chart implementation js/script.js clean
+
+    //Create format objects for date parsing
     dfor = d3.timeFormat('%Y-%m');
     mopar = d3.timeParse('%m')
+
     for (i=0; i<d.length; i++){
       
-      //add conditional for inconsisttant  date and time format in data
+      //add dynamic generation of dat parser for inconsisttant  formatting in data
       (d[i]['ListingCreationDate'].length > 19) ? dpar = d3.timeParse('%Y-%m-%d %H:%M:%S.%L%L%L') : dpar = d3.timeParse('%Y-%m-%d %H:%M:%S');
       
-      //Create additoinal feilds that will help in processing the data
+      //Create additoinal fields that will help in processing the data
       d[i]['LoanQuarter'] = returnQuarter(dpar(d[i]['ListingCreationDate']));
       d[i]['LoanYear'] = new Date(dpar(d[i]['ListingCreationDate']).getFullYear(), 0, 1); 
-      
+      d[i]['Era'] = classifyEra(  dpar(d[i]['ListingCreationDate']));
+
 
       //cast date back to string from date function with new format
-      d[i]['ListingCreationDate'] = dfor(dpar(d[i]['ListingCreationDate'])) ;
-    
+      d[i]['ListingCreationDate'] = dfor(dpar(d[i]['ListingCreationDate'])) ;    
       
       function returnQuarter(loanDate){
         // Create the quarter data  by rounding up to next int for devisor
@@ -40,11 +43,29 @@
         return new Date(loanDate.getFullYear(), (Math.ceil(dpar(loanDate.getMonth()/3))-1), 1);
       }
 
+      function classifyEra(d){
+        //Create conditions to classify the prosper era
+        if  (d.getFullYear() < 2009) {
+          return'Pre SEC Closure';  
+        }
+
+        if (d.getFullYear() < 2013 && d.getFullYear() >= 2009){
+          return 'Post SEC Closure';  
+        }
+
+        if  (d.getFullYear() >= 2013) {
+          return 'Post Law Suit'; 
+        }
+
+      }
+
     }
     
     console.log(d.columns);
     draw(d);
   });
+
+  //close  timer for data processing
   console.timeEnd("TotalTime:");
 
 
@@ -58,7 +79,6 @@
     <table>
       <tr>
         <td id='chartArea' span=2> </td>
-        <td id='chartDetails' span=1>  </td>
       </tr>
     </table>
   </div>
