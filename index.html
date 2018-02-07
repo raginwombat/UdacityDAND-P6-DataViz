@@ -1,7 +1,8 @@
 <html>
 <head>
 <link rel='stylesheet' type='text/css' href='css/style.css'>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+  </script>
 <script src='js/d3.v4.min.js'></script>
 <script src='js/dimple.v2.3.0.min.js'></script>
 <script src="js/scripts.js"></script>
@@ -17,7 +18,8 @@
   console.time("TotalTime:");
   
   d3.csv('data/medParsedData.csv', function(d){
-    //All of the data manipulation is done in this step to keep the chart implementation js/script.js clean
+    //All of the data manipulation is done in this step to keep the chart 
+    //implementation js/script.js clean
 
     //Create format objects for date parsing
     dfor = d3.timeFormat('%Y-%m');
@@ -25,12 +27,16 @@
 
     for (i=0; i<d.length; i++){
       
-      //add dynamic generation of dat parser for inconsisttant  formatting in data
-      (d[i]['ListingCreationDate'].length > 19) ? dpar = d3.timeParse('%Y-%m-%d %H:%M:%S.%L%L%L') : dpar = d3.timeParse('%Y-%m-%d %H:%M:%S');
+      //Addin dynamic generation of dat parser for inconsisttant 
+      //formatting in data
+      (d[i]['ListingCreationDate'].length > 19) ? 
+          dpar = d3.timeParse('%Y-%m-%d %H:%M:%S.%L%L%L') : 
+          dpar = d3.timeParse('%Y-%m-%d %H:%M:%S');
       
       //Create additoinal fields that will help in processing the data
       d[i]['LoanQuarter'] = returnQuarter(dpar(d[i]['ListingCreationDate']));
-      d[i]['LoanYear'] = new Date(dpar(d[i]['ListingCreationDate']).getFullYear(), 0, 1); 
+      d[i]['LoanYear'] = new Date(dpar(d[i]['ListingCreationDate'])
+            .getFullYear(), 0, 1); 
       d[i]['Era'] = classifyEra(  dpar(d[i]['ListingCreationDate']));
 
 
@@ -40,7 +46,8 @@
       function returnQuarter(loanDate){
         // Create the quarter data  by rounding up to next int for devisor
         // The date constructor's Month is zero indexed so  subtract 1 from it
-        return new Date(loanDate.getFullYear(), (Math.ceil(dpar(loanDate.getMonth()/3))-1), 1);
+        return new Date(loanDate.getFullYear(), (Math.ceil(dpar(loanDate
+          .getMonth()/3))-1), 1);
       }
 
       function classifyEra(d){

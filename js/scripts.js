@@ -3,12 +3,11 @@ function draw(data){
 
     function dateFilter(data, startYear, EndYear){
       return data.filter( function(d){ 
-                           return (d['LoanYear'].getFullYear() >= startYear && d['LoanYear'].getFullYear() < EndYear ); 
+                           return (d['LoanYear'].getFullYear() >= startYear
+                                 && d['LoanYear'].getFullYear() < EndYear ); 
                          }  );      
     }
 
-
-    //debugger;
     //Create the svg and chart    
     'use strict';
     var margin = 50,
@@ -25,20 +24,23 @@ function draw(data){
       var myChart = new dimple.chart(svg1, data);
     
       //Setup the x axis
-      var xaxis = myChart.addTimeAxis('x',  'ListingCreationDate', '%Y-%m', '%Y');
+      var xaxis = myChart.addTimeAxis('x',  'ListingCreationDate',
+           '%Y-%m', '%Y');
       xaxis.timePeriod = d3.timeYear;
       xaxis.timeInterval = 1;
       xaxis.title = 'Loan Date'
       xaxis.fontSize = '1em'
 
-      //Create the yaxis that will draw the data. The data has already been sectioned.
-      //The category function is utilized to generate the color coding
+      //Create the yaxis that will draw the data. The data has 
+      //already been sectioned. The category function is utilized to generate 
+      //the color coding
       var yaxis = myChart.addMeasureAxis('y', 'ListingCreationDate' );
       yaxis.title  = 'Total Number of Loans';
       yaxis.fontSize = '1em'
       yaxis.ticks=15
 
-      //Create the series to match the axes already crated and bind the filtered data to them
+      //Create the series to match the axes already crated and bind the 
+      //filtered data to them
       var ser = myChart.addSeries(['Era'], dimple.plot.bar, [xaxis , yaxis])
       
       //Custom colors for serires
@@ -54,6 +56,4 @@ function draw(data){
      legend.fontSize = '1.5em'
 
       myChart.draw();
-      //debugger;
-
     }
