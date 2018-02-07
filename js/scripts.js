@@ -50,7 +50,7 @@ function draw(data){
 
       // myChart.addLegend(x, y, width, height, horizontalAlign, series)
 
-     var legend = myChart.addLegend(500, 590, '50%', 60);
+     var legend = myChart.addLegend(500, 583, '50%', 60);
      legend.fontSize = '1.5em'
 
       myChart.draw();
